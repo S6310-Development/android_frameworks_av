@@ -552,11 +552,15 @@ status_t ACodec::allocateBuffersOnPort(OMX_U32 portIndex) {
 
     status_t err;
     if (mNativeWindow != NULL && portIndex == kPortIndexOutput) {
+#ifdef NO_METADATA_IN_VIDEO_BUFFERS
+        err = allocateOutputBuffersFromNativeWindow();
+#else
         if (mStoreMetaDataInOutputBuffers) {
             err = allocateOutputMetaDataBuffers();
         } else {
             err = allocateOutputBuffersFromNativeWindow();
         }
+#endif
     } else {
         OMX_PARAM_PORTDEFINITIONTYPE def;
         InitOMXParams(&def);

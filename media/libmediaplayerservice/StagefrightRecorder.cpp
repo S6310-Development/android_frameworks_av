@@ -1333,6 +1333,9 @@ void StagefrightRecorder::clipVideoFrameWidth() {
 
 status_t StagefrightRecorder::checkVideoEncoderCapabilities(
         bool *supportsCameraSourceMetaDataMode) {
+#ifdef USE_SUBMIT_ONE_INPUT_BUFFER
+    *supportsCameraSourceMetaDataMode = true;
+#else	
     /* hardware codecs must support camera source meta data mode */
     Vector<CodecCapabilities> codecs;
     OMXClient client;
@@ -1349,6 +1352,7 @@ status_t StagefrightRecorder::checkVideoEncoderCapabilities(
             false /* decoder */, true /* hwCodec */, &codecs);
 
     *supportsCameraSourceMetaDataMode = codecs.size() > 0;
+#endif
     ALOGV("encoder %s camera source meta-data mode",
             *supportsCameraSourceMetaDataMode ? "supports" : "DOES NOT SUPPORT");
 
@@ -1721,6 +1725,9 @@ status_t StagefrightRecorder::setupVideoEncoder(
     uint32_t flags = 0;
     if (mIsMetaDataStoredInVideoBuffers) {
         flags |= MediaCodecSource::FLAG_USE_METADATA_INPUT;
+#ifdef USE_SUBMIT_ONE_INPUT_BUFFER
+        flags |= MediaCodecSource::FLAG_USE_SUBMIT_ONE_INPUT_BUFFER;
+#endif	
     }
 
     if (cameraSource == NULL) {

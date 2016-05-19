@@ -432,6 +432,12 @@ status_t MediaCodecSource::initEncoder() {
         mOutputFormat->setInt32("store-metadata-in-buffers", 1);
     }
 
+#ifdef USE_SUBMIT_ONE_INPUT_BUFFER	
+	if (mFlags & FLAG_USE_SUBMIT_ONE_INPUT_BUFFER) {
+        mOutputFormat->setInt32("Only-Submit-One-Input-Buffer-At-One-Time", 1);
+    }
+#endif
+
     if (mFlags & FLAG_USE_SURFACE_INPUT) {
         mOutputFormat->setInt32("create-input-buffers-suspended", 1);
     }

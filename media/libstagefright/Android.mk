@@ -210,6 +210,10 @@ LOCAL_C_INCLUDES += \
 
 endif
 
+ifeq ($(TARGET_BOARD_PLATFORM),msm7x27a)
+    LOCAL_CFLAGS += -DUSE_SUBMIT_ONE_INPUT_BUFFER
+endif
+
 LOCAL_MODULE:= libstagefright
 
 LOCAL_MODULE_TAGS := optional
